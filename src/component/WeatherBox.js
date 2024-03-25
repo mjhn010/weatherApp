@@ -1,6 +1,6 @@
 import React from 'react'
 
-const WeatherBox = ({weather,date,korea,icon}) => {
+const WeatherBox = ({weather,date,icon}) => {
   console.log("weather",weather)
   console.log(icon)
   return (

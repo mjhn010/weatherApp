@@ -4,6 +4,7 @@ import WeatherBox from "./component/WeatherBox";
 import WeatherButton from "./component/WeatherButton";
 import ClipLoader from "react-spinners/ClipLoader";
 
+
 import { useEffect, useState } from "react";
 
 
@@ -34,6 +35,7 @@ function App() {
   const [error,setError] = useState('');
   const [date,setDate] =useState('')
   const [icon,setIcon] = useState('')
+  const [inputs, setInputs] = useState('')
   
   const getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -87,6 +89,19 @@ function App() {
     let dayOfWeek = week[now.getDay()];
     setDate(todayMonth + '월 ' + todayDate + '일 ' + dayOfWeek + '요일') 
 }
+const inputHandler = async (e) =>{
+  if(e.key == "Enter"){   
+    try{
+      let url = `https://api.openweathermap.org/data/2.5/weather?q=${inputs}&appid=e9219e5484bce1b002d6150a04d17c95&units=metric`
+      let response = await fetch(url)
+      let data = await response.json()
+      setWeather(data)
+    }catch(error){
+      setError(error.message)
+        setLoading(false)
+    }
+  }
+}
   useEffect(() => {
     todayData()
     if (city == '') {
@@ -108,6 +123,7 @@ function App() {
           /></div>)
          : !error ? (<div className="container">
           <WeatherBox weather={weather} date={date} icon={icon}/>
+          <input onKeyDown={inputHandler} value={inputs} onChange={(e)=>{setInputs(e.target.value)}}/>
           <WeatherButton cities={cities}  handleCityChange={handleCityChange}  setCity={setCity}  selectedCity={city} />
         </div>):error}
     </div>
